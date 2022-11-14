@@ -23,5 +23,3 @@ Feature: Bank account operations
     Then Operation should be denied due to negative sum
     And Account balance should remain 200
 
-
-
