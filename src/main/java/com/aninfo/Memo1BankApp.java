@@ -70,23 +70,51 @@ public class Memo1BankApp {
 		accountService.deleteById(cbu);
 	}
 
-	@PutMapping("/accounts/{cbu}/withdraw")
-	public Account withdraw(@PathVariable Long cbu, @RequestParam Double sum) {
-		return accountService.withdraw(cbu, sum);
-	}
-
-	@PutMapping("/accounts/{cbu}/deposit")
-	public Account deposit(@PathVariable Long cbu, @RequestParam Double sum) {
-		return accountService.deposit(cbu, sum);
-	}
+//	@PutMapping("/accounts/{cbu}/withdraw")
+//	public Account withdraw(@PathVariable Long cbu, @RequestParam Double sum) {
+//		return accountService.withdraw(cbu, sum);
+//	}
+//
+//	@PutMapping("/accounts/{cbu}/deposit")
+//	public Account deposit(@PathVariable Long cbu, @RequestParam Double sum) {
+//		return accountService.deposit(cbu, sum);
+//	}
 
 	@PostMapping("/transactions")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Transaction createTransaction(@RequestBody Transaction transaction) {
+		if (transaction.getTipo().equals("Deposit")){
+			accountService.deposit(transaction.getCbu(), transaction.getSum());
+		}
+		else{
+			accountService.withdraw(transaction.getCbu(),transaction.getSum());
+		}
 		return transactionService.createTransaction(transaction);
 	}
 
+	@GetMapping("/transactions/")
+	public Collection<Transaction> getTransactions(@RequestParam Long cbu) {
+		return transactionService.getTransactions(cbu);
+	}
 
+	@GetMapping("/transactions/{ID}")
+	public ResponseEntity<Transaction> getTransaction(@PathVariable Long ID) {
+		Optional<Transaction> t = transactionService.getTransaction(ID);
+		return ResponseEntity.of(t);
+	}
+
+	@DeleteMapping("/transactions/{ID}")
+	public void deleteTransaction(@PathVariable Long ID) {
+		Optional<Transaction> transactionOptional = transactionService.getTransaction(ID);
+		Transaction transaction = transactionOptional.get();
+		if ( transaction.getTipo().equals("Deposit")) {
+			accountService.withdraw(transaction.getCbu(), transaction.getSum());
+		}
+		else{
+			accountService.deposit(transaction.getCbu(), transaction.getSum());
+		}
+		transactionService.deleteById(ID);
+	}
 
 	@Bean
 	public Docket apiDocket() {

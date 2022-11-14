@@ -7,33 +7,50 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long clave;
+    private Long transactionID;
 
-    private Double monto;
+    private Long cbu;
 
     private String tipo;
+
+    private Double sum;
 
     public Transaction(){
     }
 
-    public Transaction(Double balance) {
-        this.balance = balance;
+    public Transaction(Long ID, Long cbu, String tipo, Double monto) {
+        this.transactionID = ID;
+        this.cbu = cbu;
+        this.tipo = tipo;
+        this.sum = monto;
+    }
+
+    public Long getID(){
+        return transactionID;
     }
 
     public Long getCbu() {
         return cbu;
     }
 
-    public void setCbu(Long cbu) {
-        this.cbu = cbu;
+    public Double getSum() {
+        return sum;
     }
 
-    public Double getBalance() {
-        return balance;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
+//    public void setCbu(Long cbu) {
+//        this.cbu = cbu;
+//    }
+//
+//    public Double getBalance() {
+//        return balance;
+//    }
+//
+//    public void setBalance(Double balance) {
+//        this.balance = balance;
+//    }
 
 }
